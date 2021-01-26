@@ -7,5 +7,5 @@ func main() {
 		"michal",
 		"school",
 	)
-	a.Run(":5432")
+	a.Run("localhost:5432")
 }

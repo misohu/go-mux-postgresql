@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -59,29 +58,29 @@ func TestEmptyTable(t *testing.T) {
 	}
 }
 
-func executeReques(r *http.Request) *httptest.ResponseRecorder {
+func executeReques(req *http.Request) *httptest.ResponseRecorder {
 	rr := httptest.NewRecorder()
-	a.Router.ServeHTTP(rr, r)
+	a.Router.ServeHTTP(rr, req)
+
 	return rr
 }
 
-func checkResponseCode(t *testing.T, expectedCode, actualCode int) {
-	if expectedCode != actualCode {
-		t.Errorf("Expected response code %d. Got %d\n", expectedCode, actualCode)
+func checkResponseCode(t *testing.T, expected, actual int) {
+	if expected != actual {
+		t.Errorf("Expected response code %d. Got %d\n", expected, actual)
 	}
 }
 
-func TestGetNonexistentProduct(t *testing.T) {
+func TestGetNonExistentProduct(t *testing.T) {
 	clearTable()
 
 	req, _ := http.NewRequest("GET", "/product/11", nil)
 	response := executeReques(req)
 
-	checkResponseCode(t, http.StatusOK, response.Code)
+	checkResponseCode(t, http.StatusNotFound, response.Code)
 
 	var m map[string]string
 	json.Unmarshal(response.Body.Bytes(), &m)
-	fmt.Println(m)
 	if m["error"] != "Product not found" {
 		t.Errorf("Expected the 'error' key of the response to be set to 'Product not found'. Got '%s'", m["error"])
 	}
@@ -113,11 +112,11 @@ func TestCreareProduct(t *testing.T) {
 	}
 }
 
-func TestProduct(t *testing.T) {
+func TestGetProduct(t *testing.T) {
 	clearTable()
 	addProducts(1)
 
-	req, _ := http.NewRequest("Get", "/products/1", nil)
+	req, _ := http.NewRequest("GET", "/product/1", nil)
 	response := executeReques(req)
 
 	checkResponseCode(t, http.StatusOK, response.Code)
