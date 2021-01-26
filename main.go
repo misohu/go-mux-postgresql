@@ -1,11 +1,11 @@
 package main
 
 func main() {
-	a:= App{}
+	a := App{}
 	a.Initializer(
 		"michal",
-		"michal", 
+		"michal",
 		"school",
 	)
-	a.Runner(":5432")
+	a.Run(":5432")
 }
